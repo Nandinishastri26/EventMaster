@@ -1,11 +1,13 @@
-import { createServerSupabase } from '../../../../../lib/supabaseServer';
 import { NextRequest, NextResponse } from 'next/server';
+import { createServerSupabase } from '../../../../../lib/supabaseServer';
 
-export async function GET(_req: NextRequest, context: { params: { id: string } }) {
-  const { params } = context;
+export async function GET(
+  _req: NextRequest,
+  context: { params: { id: string } }
+) {
   const supabase = createServerSupabase();
+  const { id } = context.params;
 
-  // 🔐 Get logged-in user
   const {
     data: { user },
     error: authError,
@@ -15,11 +17,10 @@ export async function GET(_req: NextRequest, context: { params: { id: string } }
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // 📄 Fetch booking + event only if it belongs to the user
   const { data, error } = await supabase
     .from('bookings')
     .select('*, event:events(*)')
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('user_id', user.id)
     .single();
 
