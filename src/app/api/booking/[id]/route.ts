@@ -1,7 +1,8 @@
 import { createServerSupabase } from '../../../../../lib/supabaseServer';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, context: { params: { id: string } }) {
+  const { params } = context;
   const supabase = createServerSupabase();
 
   // 🔐 Get logged-in user
@@ -17,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   // 📄 Fetch booking + event only if it belongs to the user
   const { data, error } = await supabase
     .from('bookings')
-    .select('*, event:events(*)') // 👈 renames relation to `event`
+    .select('*, event:events(*)')
     .eq('id', params.id)
     .eq('user_id', user.id)
     .single();
