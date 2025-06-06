@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { User } from "lucide-react";
 
 export default function Navbar() {
