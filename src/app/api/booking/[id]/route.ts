@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '../../../../../lib/supabaseServer';
 
 export async function GET(
-    _req: NextRequest,
     // context: { params: { id: string } }
 ) {
     const supabase = createServerSupabase();
