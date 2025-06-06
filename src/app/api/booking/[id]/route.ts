@@ -3,14 +3,14 @@ import { createServerSupabase } from '../../../../../lib/supabaseServer';
 
 export async function GET(
     _req: NextRequest,
-    context: { params: { id: string } }
+    // context: { params: { id: string } }
 ) {
     const supabase = createServerSupabase();
 
-    const { id } = context.params;;
+    // const { id } = context.params;
     // Handle potential array type for id
-    const bookingId = Array.isArray(id) ? id[0] : id;
-
+    // const bookingId = Array.isArray(id) ? id[0] : id;
+const bookingId="341f7452-ffcb-4952-bb88-98ed28ce754f";
     if (!bookingId) {
         return NextResponse.json({ error: 'Booking ID is required' }, { status: 400 });
     }
