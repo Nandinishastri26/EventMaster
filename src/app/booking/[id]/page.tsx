@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 
 export default function BookingDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const [booking, setBooking] = useState<any>(null);
-  const [event, setEvent] = useState<any>(null);
+  const [booking, setBooking] = useState<unknown>(null);
+  const [event, setEvent] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -29,6 +29,7 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
 
       } catch (err) {
         setError('Failed to load booking details');
+        console.log(err)
       } finally {
         setLoading(false);
       }

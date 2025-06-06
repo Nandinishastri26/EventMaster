@@ -10,15 +10,10 @@ export default function Navbar() {
   const user = useUser();
   const supabase = useSupabaseClient();
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  console.log("user", user);
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange(() => {
       router.refresh(); // Ensures navbar updates after login/logout
     });
-
-    setIsLoading(false);
-
     return () => {
       listener?.subscription.unsubscribe();
     };

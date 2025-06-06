@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { registerUser } from '../../../lib/auth';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
@@ -25,7 +24,8 @@ const [message, setMessage] = useState('');
        router.push('/login');
 
     } else {
-      setMessage(`Error: ${data.error}`);
+       setError(`Error: ${data.error}`);
+       setMessage('');
     }
   };
   

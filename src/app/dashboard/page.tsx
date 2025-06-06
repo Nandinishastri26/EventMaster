@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { fetchUserBookings } from '../../../lib/bookings';
-import { getCurrentUser } from '../../../lib/auth'
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../lib/supabaseClient';
 export default function DashboardPage() {
-  const [bookings, setBookings] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
     const router = useRouter();

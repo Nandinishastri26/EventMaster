@@ -8,7 +8,7 @@ export default function NewBookingPage() {
   const searchParams = useSearchParams();
   const eventId = searchParams.get("eventId");
 
-  const [event, setEvent] = useState<any>(null);
+  const [event, setEvent] = useState<unknown>(null);
   const [tickets, setTickets] = useState(1);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export default function NewBookingPage() {
         } else {
           setEvent(result);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load event details");
       }
       setEventLoading(false);
@@ -40,44 +40,6 @@ export default function NewBookingPage() {
 
     fetchEvent();
   }, [eventId]);
-
-  // async function handleBooking() {
-  //   if (!eventId) {
-  //     setError("Event ID is missing");
-  //     return;
-  //   }
-
-  //   setError("");
-  //   setLoading(true);
-
-  //   const userRes = await getCurrentUser();
-  //   if (!userRes.data?.user) {
-  //     setError("You must be logged in to book tickets");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   const bookingData = {
-  //     user_id: userRes.data.user.id,
-  //     event_id: eventId,
-  //     tickets_count: tickets,
-  //   };
-
-  //   try {
-  //     const { error: bookingError } = await bookTicket(bookingData);
-
-  //     if (bookingError) {
-  //       setError(bookingError.message);
-  //     } else {
-  //       alert("Booking successful!");
-  //       router.push("/booking");
-  //     }
-  //   } catch (err) {
-  //     setError("Failed to process booking");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 
 async function handleBooking() {
   if (!eventId) {
@@ -126,7 +88,7 @@ const {
       alert("Booking successful!");
       router.push("/booking");
     }
-  } catch (err) {
+  } catch {
     setError("Failed to process booking");
   } finally {
     setLoading(false);

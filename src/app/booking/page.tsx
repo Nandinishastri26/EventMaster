@@ -1,18 +1,17 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { fetchUserBookings } from '../../../lib/bookings';
-import { getCurrentUser } from '../../../lib/auth';
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { getCurrentUser } from "../../../lib/auth";
 
 type Booking = {
+  tickets_count: number;
   id: string;
   event_id: string;
-  tickets_booked: number;
   status: string;
   booking_date: string;
-  event: {
+  events: {
     id: string;
-    name: string;
+    title: string;
     date: string;
     location: string;
     price: number;
@@ -22,62 +21,38 @@ type Booking = {
 export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-   
-    //  const fetchBooking = async () => {
-    //   setLoading(true);
-
-    //   const userRes = await getCurrentUser();
-
-    //   if (!userRes.data?.user) {
-    //     setError('You must be logged in to view this booking');
-    //     setLoading(false);
-    //     return;
-    //   }
-
-    //   try {
-    //     const response = await fetch(`/api/booking/${userRes.data.user.id}`);
-    //     const result = await response.json();
-
-    //     if (!response.ok) {
-    //       throw new Error(result?.error || 'Failed to fetch booking');
-    //     }
-
-    //     setBookings(result.data);
-    //   } catch (err: any) {
-    //     setError(err.message);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
     const fetchBooking = async () => {
-  setLoading(true);
+      setLoading(true);
 
-  const userRes = await getCurrentUser();
+      const userRes = await getCurrentUser();
 
-  if (!userRes.data?.user) {
-    setError('You must be logged in to view this booking');
-    setLoading(false);
-    return;
-  }
+      if (!userRes.data?.user) {
+        setError("You must be logged in to view this booking");
+        setLoading(false);
+        return;
+      }
+      try {
+        const response = await fetch(`/api/booking`);
+        const result = await response.json();
 
-  try {
-    const response = await fetch(`/api/booking`);
-    const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result?.error || "Failed to fetch bookings");
+        }
 
-    if (!response.ok) {
-      throw new Error(result?.error || 'Failed to fetch bookings');
-    }
-
-    setBookings(result.data);
-  } catch (err: any) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+        setBookings(result.data);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchBooking();
   }, []);
@@ -105,11 +80,13 @@ export default function BookingsPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">My Bookings</h1>
-      
+
       {bookings.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">You haven't made any bookings yet</p>
-          <Link 
+          <p className="text-gray-500 mb-4">
+          {"You haven't made any bookings yet"}
+          </p>
+          <Link
             href="/events"
             className="px-4 py-2 bg-gradient-to-r from-blue-500 to-violet-600 text-white rounded"
           >
@@ -121,19 +98,29 @@ export default function BookingsPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tickets</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Event
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tickets
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {bookings.map(booking => (
+              {bookings.map((booking) => (
                 <tr key={booking.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="font-medium text-gray-900">
-                      {booking.events?.title || ''}
+                      {booking.events?.title || ""}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -143,16 +130,21 @@ export default function BookingsPage() {
                     {booking?.tickets_count}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
-                        booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                        'bg-red-100 text-red-800'}`}
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      ${
+                        booking.status === "confirmed"
+                          ? "bg-green-100 text-green-800"
+                          : booking.status === "pending"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
                     >
                       {booking.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <Link 
+                    <Link
                       href={`/booking/${booking.id}`}
                       className="text-violet-600 hover:text-violet-900"
                     >
