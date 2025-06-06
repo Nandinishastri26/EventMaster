@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '../../../../../lib/supabaseServer';
-type RouteContext = {
-    params: {
-        id: string;
-    };
-};
 
 export async function GET(
     _req: NextRequest,
-    { params }: RouteContext
+    context: { params: { id: string } }
 ) {
     const supabase = createServerSupabase();
 
-    const { id } = params;
+    const { id } = context.params;;
     // Handle potential array type for id
     const bookingId = Array.isArray(id) ? id[0] : id;
 
